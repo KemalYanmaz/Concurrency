@@ -6,21 +6,15 @@
  * Execute as a single action, relative to other threads.
  * Cannot be interrupted by other concurrent threads.
  */
-import java.util.concurrent.locks.*;
+import java.util.concurrent.atomic.*;
 
 class Shopper extends Thread{
 
-    static int garlicCount = 0;
-    static Lock pencil = new ReentrantLock();
+    static AtomicInteger garlicCount = new AtomicInteger(0);
     @Override
     public void run() {
-        for(int i=0;i<5;i++){
-            pencil.lock();
-            garlicCount++;
-            pencil.unlock();
-            try {
-                Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
-            System.out.println(Thread.currentThread().getName()+" is thinking");
+        for(int i=0;i<10_000_000;i++){
+            garlicCount.incrementAndGet();
         }
     }
 }
@@ -36,6 +30,6 @@ public class Exercise4 {
         barron.join();
         olivia.join();
 
-        System.out.printf("we should buy %d garlic.",Shopper.garlicCount);
+        System.out.println("we should buy "+Shopper.garlicCount+" garlic.");
     }
 }
