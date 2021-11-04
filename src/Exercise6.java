@@ -19,10 +19,9 @@ class itemCounters extends Thread{
     @Override
     public void run() {
         while (itemsOnNotepad<20){
-            if(itemsToAdd>0){// add item(s) to shared notepad
+            if((itemsToAdd>0) && pencil.tryLock()){// add item(s) to shared notepad
                 try{
-                    pencil.lock();
-                    itemsOnNotepad++;
+                    itemsOnNotepad+=itemsToAdd;
                     System.out.println(this.getName() + " added "+ itemsToAdd+" item(s) to notepad.");
                     itemsToAdd = 0;
                     Thread.sleep(300);//time spend writing
